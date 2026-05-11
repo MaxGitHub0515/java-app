@@ -39,6 +39,10 @@ Built with modern Java backend technologies and MVC architecture.
 </p>
 
 <p align="center">
+  🚀 <a href="https://java-app-docker.onrender.com/">Open Live Application</a>
+</p>
+
+<p align="center">
 Full application walkthrough including authentication, analytics dashboard, customer management, inventory control, and order processing.
 </p>
 
