@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title th:text="${customer.fullName} + ' — ShopAdmin'">Customer</title>
+  <link rel="stylesheet" th:href="@{/css/admin.css}"/>
+</head>
+<body>
+<div class="shell">
+
+  <nav th:replace="fragments/layout :: sidebar('customers')"></nav>
+
+  <div class="main">
+    <div class="topbar">
+      <span class="topbar-title" th:text="${customer.fullName}">Customer</span>
+      <div class="topbar-right">
+        <a th:href="@{/customers/edit/{id}(id=${customer.customerId})}" class="btn">Edit</a>
+        <a th:href="@{/customers}" class="btn">← Back</a>
+      </div>
+    </div>
+    <div class="content">
+
+      <div class="panel-row">
+
+        <!-- Profile card -->
+        <div class="panel">
+          <div class="panel-head"><span class="panel-title">Profile</span></div>
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+            <div class="avatar" style="width:48px;height:48px;font-size:16px" th:text="${customer.initials}">??</div>
+            <div>
+              <div style="font-weight:500;font-size:15px" th:text="${customer.fullName}">Name</div>
+              <div style="color:var(--text-tertiary);font-size:12px">Customer #<span th:text="${customer.customerId}"></span></div>
+            </div>
+          </div>
+          <hr class="divider"/>
+          <div class="detail-grid">
+            <span class="detail-label">Email</span>
+            <span class="detail-value" th:text="${customer.email}">—</span>
+            <span class="detail-label">Phone</span>
+            <span class="detail-value" th:text="${customer.phoneNumber}">—</span>
+            <span class="detail-label">Address</span>
+            <span class="detail-value" th:text="${customer.address}">—</span>
+            <span class="detail-label">City</span>
+            <span class="detail-value" th:text="${customer.city}">—</span>
+            <span class="detail-label">State</span>
+            <span class="detail-value" th:text="${customer.state}">—</span>
+            <span class="detail-label">Zip</span>
+            <span class="detail-value" th:text="${customer.zipCode}">—</span>
+          </div>
+        </div>
+
+        <!-- Orders summary -->
+        <div class="panel">
+          <div class="panel-head">
+            <span class="panel-title">Order history</span>
+            <span class="panel-sub" th:text="${orders.size()} + ' orders'">0 orders</span>
+          </div>
+          <div th:if="${orders.isEmpty()}" style="color:var(--text-tertiary);font-size:13px">No orders yet.</div>
+          <table th:unless="${orders.isEmpty()}">
+            <thead><tr><th>#</th><th>Total</th><th>Status</th><th></th></tr></thead>
+            <tbody>
+              <tr th:each="o : ${orders}">
+                <td style="color:var(--text-tertiary)">#<span th:text="${o.orderId}"></span></td>
+                <td th:text="'$' + ${#numbers.formatDecimal(o.totalAmount,1,'COMMA',2,'POINT')}">$0</td>
+                <td>
+                  <span th:text="${o.orderStatus}"
+                        th:class="'badge badge-' + ${o.orderStatus.toString().toLowerCase()}">—</span>
+                </td>
+                <td>
+                  <a th:href="@{/orders/{id}(id=${o.orderId})}" class="btn btn-sm">View</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

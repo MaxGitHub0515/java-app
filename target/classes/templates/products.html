@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Products — ShopAdmin</title>
+  <link rel="stylesheet" th:href="@{/css/admin.css}"/>
+</head>
+<body>
+<div class="shell">
+
+  <nav th:replace="fragments/layout :: sidebar('products')"></nav>
+
+  <div class="main">
+    <div class="topbar">
+      <span class="topbar-title">Products</span>
+      <div class="topbar-right">
+        <a th:href="@{/products/new}" class="btn btn-primary">+ Add product</a>
+      </div>
+    </div>
+    <div class="content">
+
+      <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+      <div th:if="${error}"   class="alert alert-error"   th:text="${error}"></div>
+
+      <!-- Low stock alert banner -->
+      <div th:if="${!lowStock.isEmpty()}" class="alert alert-error"
+           style="display:flex;align-items:center;gap:8px">
+        <strong>Low stock:</strong>
+        <span th:each="p,s : ${lowStock}">
+          <span th:text="${p.name}">p</span><span th:text="${p.stockQuantity}" style="margin-left:2px;font-weight:500"> (0)</span><span th:unless="${s.last}">, </span>
+        </span>
+      </div>
+
+      <!-- Search -->
+      <form method="get" th:action="@{/products}" style="display:flex;gap:8px;margin-bottom:16px">
+        <input class="search-bar" style="margin-bottom:0" name="search"
+               th:value="${search}" placeholder="Search products…"/>
+        <button class="btn" type="submit">Search</button>
+        <a th:if="${search}" th:href="@{/products}" class="btn">Clear</a>
+      </form>
+
+      <div class="panel" style="padding:0">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Level</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:if="${products.isEmpty()}">
+                <td colspan="6" style="text-align:center;color:var(--text-tertiary);padding:32px">
+                  No products found.
+                </td>
+              </tr>
+              <tr th:each="p : ${products}">
+                <td style="font-weight:500" th:text="${p.name}">—</td>
+                <td style="color:var(--text-secondary);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"
+                    th:text="${p.description}">—</td>
+                <td th:text="'$' + ${#numbers.formatDecimal(p.price,1,'COMMA',2,'POINT')}">$0</td>
+                <td th:text="${p.stockQuantity}">0</td>
+                <td style="min-width:100px">
+                  <div class="stock-wrap">
+                    <div class="stock-bar">
+                      <div class="stock-fill"
+                           th:style="'width:' + ${p.stockPercent} + '%; background:' + ${p.stockColor}">
+                      </div>
+                    </div>
+                    <span style="font-size:11px;color:var(--text-tertiary);width:28px"
+                          th:text="${p.stockPercent} + '%'"></span>
+                  </div>
+                </td>
+                <td>
+                  <div style="display:flex;gap:6px;align-items:center">
+                    <a th:href="@{/products/edit/{id}(id=${p.productId})}" class="btn btn-sm">Edit</a>
+                    <!-- Quick restock inline -->
+                    <form th:action="@{/products/restock/{id}(id=${p.productId})}" method="post"
+                          style="display:flex;gap:4px">
+                      <input type="number" name="quantity" value="10" min="1"
+                             style="width:52px;padding:4px 6px;border:0.5px solid var(--border-hover);border-radius:6px;font-size:12px;background:var(--bg-primary);color:var(--text-primary)"/>
+                      <button class="btn btn-sm" type="submit">Restock</button>
+                    </form>
+                    <form th:action="@{/products/delete/{id}(id=${p.productId})}" method="post"
+                          onsubmit="return confirm('Delete this product?')">
+                      <button class="btn btn-sm btn-danger" type="submit">Delete</button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+</body>
+</html>

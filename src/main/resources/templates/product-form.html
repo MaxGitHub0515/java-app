@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title th:text="${product.productId == 0} ? 'Add Product' : 'Edit Product'">Product Form</title>
+  <link rel="stylesheet" th:href="@{/css/admin.css}"/>
+</head>
+<body>
+<div class="shell">
+
+  <nav th:replace="fragments/layout :: sidebar('products')"></nav>
+
+  <div class="main">
+    <div class="topbar">
+      <span class="topbar-title"
+            th:text="${product.productId == 0} ? 'Add product' : 'Edit product'">Form</span>
+      <div class="topbar-right">
+        <a th:href="@{/products}" class="btn">← Cancel</a>
+      </div>
+    </div>
+    <div class="content">
+      <div class="panel" style="max-width:540px">
+        <form th:action="@{/products/save}" method="post" th:object="${product}">
+          <input type="hidden" th:field="*{productId}"/>
+
+          <div class="form-group">
+            <label class="form-label">Product name *</label>
+            <input class="form-input" th:field="*{name}" required/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Description</label>
+            <textarea class="form-textarea" th:field="*{description}" rows="3"></textarea>
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Price ($) *</label>
+              <input class="form-input" type="number" step="0.01" min="0" th:field="*{price}" required/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Stock quantity *</label>
+              <input class="form-input" type="number" min="0" th:field="*{stockQuantity}" required/>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <button class="btn btn-primary" type="submit">Save product</button>
+            <a th:href="@{/products}" class="btn">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title th:text="'Order #' + ${order.orderId} + ' — ShopAdmin'">Order</title>
+  <link rel="stylesheet" th:href="@{/css/admin.css}"/>
+</head>
+<body>
+<div class="shell">
+
+  <nav th:replace="fragments/layout :: sidebar('orders')"></nav>
+
+  <div class="main">
+    <div class="topbar">
+      <span class="topbar-title" th:text="'Order #' + ${order.orderId}">Order</span>
+      <div class="topbar-right">
+        <a th:href="@{/orders}" class="btn">← Back</a>
+      </div>
+    </div>
+    <div class="content">
+
+      <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+      <div th:if="${error}"   class="alert alert-error"   th:text="${error}"></div>
+
+      <div class="panel-row">
+
+        <!-- Order info -->
+        <div class="panel">
+          <div class="panel-head"><span class="panel-title">Order info</span></div>
+          <div class="detail-grid">
+            <span class="detail-label">Order ID</span>
+            <span class="detail-value">#<span th:text="${order.orderId}"></span></span>
+            <span class="detail-label">Customer</span>
+            <span class="detail-value">
+              <a th:href="@{/customers/{id}(id=${order.customer.customerId})}"
+                 style="color:var(--purple-600)"
+                 th:text="${order.customer.fullName}">—</a>
+            </span>
+            <span class="detail-label">Date</span>
+            <span class="detail-value"
+                  th:text="${order.orderDate != null} ? ${#dates.format(order.orderDate,'dd MMM yyyy HH:mm')} : '—'">—</span>
+            <span class="detail-label">Total</span>
+            <span class="detail-value" style="font-weight:500"
+                  th:text="'$' + ${#numbers.formatDecimal(order.totalAmount,1,'COMMA',2,'POINT')}">$0</span>
+            <span class="detail-label">Status</span>
+            <span class="detail-value">
+              <span th:text="${order.orderStatus}"
+                    th:class="'badge badge-' + ${order.orderStatus.toString().toLowerCase()}">—</span>
+            </span>
+          </div>
+
+          <hr class="divider"/>
+
+          <!-- Status update form -->
+          <div class="panel-head" style="margin-bottom:10px"><span class="panel-title">Update status</span></div>
+          <form th:action="@{/orders/status/{id}(id=${order.orderId})}" method="post"
+                style="display:flex;gap:8px;align-items:center">
+            <select class="form-select" name="status" style="flex:1">
+              <option th:each="s : ${statuses}"
+                      th:value="${s.name()}"
+                      th:text="${s.name()}"
+                      th:selected="${s == order.orderStatus}">Status</option>
+            </select>
+            <button class="btn btn-primary" type="submit">Update</button>
+          </form>
+        </div>
+
+        <!-- Line items -->
+        <div class="panel">
+          <div class="panel-head">
+            <span class="panel-title">Line items</span>
+            <span class="panel-sub" th:text="${details.size()} + ' item(s)'"></span>
+          </div>
+          <table>
+            <thead><tr><th>Product</th><th>Qty</th><th>Unit price</th><th>Total</th></tr></thead>
+            <tbody>
+              <tr th:each="d : ${details}">
+                <td th:text="${d.product.name}">—</td>
+                <td th:text="${d.quantity}">0</td>
+                <td th:text="'$' + ${#numbers.formatDecimal(d.price,1,'COMMA',2,'POINT')}">$0</td>
+                <td style="font-weight:500"
+                    th:text="'$' + ${#numbers.formatDecimal(d.lineTotal,1,'COMMA',2,'POINT')}">$0</td>
+              </tr>
+            </tbody>
+          </table>
+          <hr class="divider"/>
+          <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:500">
+            <span>Order total</span>
+            <span th:text="'$' + ${#numbers.formatDecimal(order.totalAmount,1,'COMMA',2,'POINT')}">$0</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

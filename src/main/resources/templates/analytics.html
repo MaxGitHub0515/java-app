@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Analytics — ShopAdmin</title>
+  <link rel="stylesheet" th:href="@{/css/admin.css}"/>
+</head>
+<body>
+<div class="shell">
+
+  <nav th:replace="fragments/layout :: sidebar('analytics')"></nav>
+
+  <div class="main">
+    <div class="topbar">
+      <span class="topbar-title">Analytics</span>
+    </div>
+    <div class="content">
+
+      <!-- KPI cards -->
+      <div class="kpi-grid">
+        <div class="kpi">
+          <div class="kpi-label">Total revenue</div>
+          <div class="kpi-value" th:text="'$' + ${#numbers.formatDecimal(totalRevenue,1,'COMMA',2,'POINT')}">$0</div>
+          <div class="kpi-sub">Excl. cancelled</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Total orders</div>
+          <div class="kpi-value" th:text="${totalOrders}">0</div>
+          <div class="kpi-sub">All statuses</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Customers</div>
+          <div class="kpi-value" th:text="${totalCustomers}">0</div>
+          <div class="kpi-sub">Registered</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Avg order value</div>
+          <div class="kpi-value" th:text="'$' + ${#numbers.formatDecimal(avgOrderValue,1,'COMMA',2,'POINT')}">$0</div>
+          <div class="kpi-sub">Excl. cancelled</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Products</div>
+          <div class="kpi-value" th:text="${totalProducts}">0</div>
+          <div class="kpi-sub">In catalogue</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Inventory value</div>
+          <div class="kpi-value" th:text="'$' + ${#numbers.formatDecimal(inventoryValue,1,'COMMA',2,'POINT')}">$0</div>
+          <div class="kpi-sub">Stock × price</div>
+        </div>
+      </div>
+
+      <!-- Best sellers + Order status -->
+      <div class="panel-row">
+
+        <div class="panel">
+          <div class="panel-head">
+            <span class="panel-title">Best-selling products</span>
+            <span class="panel-sub">by units sold</span>
+          </div>
+          <div th:if="${bestProducts.isEmpty()}" style="color:var(--text-tertiary);font-size:13px">No data yet.</div>
+          <div th:each="row,stat : ${bestProducts}" class="bar-row">
+            <div class="bar-label" th:text="${row[0]}">Product</div>
+            <div class="bar-track">
+              <!-- width relative to first row's units -->
+              <div class="bar-fill"
+                   th:style="'width:' + (${stat.index == 0} ? 100 : ${#numbers.formatDecimal(row[1] * 100.0 / bestProducts[0][1], 1, 'COMMA', 0, 'POINT')}) + '%; opacity:' + (1.0 - ${stat.index} * 0.15)">
+              </div>
+            </div>
+            <div class="bar-val" th:text="${row[1]} + ' units'">0</div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <span class="panel-title">Orders by status</span>
+          </div>
+          <div th:if="${ordersByStatus.isEmpty()}" style="color:var(--text-tertiary);font-size:13px">No orders yet.</div>
+          <table th:unless="${ordersByStatus.isEmpty()}">
+            <thead><tr><th>Status</th><th>Count</th></tr></thead>
+            <tbody>
+              <tr th:each="row : ${ordersByStatus}">
+                <td>
+                  <span th:text="${row[0]}"
+                        th:class="'badge badge-' + ${row[0].toString().toLowerCase()}">—</span>
+                </td>
+                <td th:text="${row[1]}">0</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+      <!-- Top customers -->
+      <div class="panel-row">
+        <div class="panel">
+          <div class="panel-head">
+            <span class="panel-title">Top customers by revenue</span>
+          </div>
+          <div th:if="${topCustomers.isEmpty()}" style="color:var(--text-tertiary);font-size:13px">No data yet.</div>
+          <div th:each="row,stat : ${topCustomers}" class="bar-row">
+            <div class="bar-label" th:text="${row[0]} + ' ' + ${row[1]}">Name</div>
+            <div class="bar-track">
+              <div class="bar-fill"
+                   th:style="'width:' + (${stat.index == 0} ? 100 : ${#numbers.formatDecimal(row[2] * 100.0 / topCustomers[0][2], 1, 'COMMA', 0, 'POINT')}) + '%; opacity:' + (1.0 - ${stat.index} * 0.15)">
+              </div>
+            </div>
+            <div class="bar-val" th:text="'$' + ${#numbers.formatDecimal(row[2],1,'COMMA',2,'POINT')}">$0</div>
+          </div>
+        </div>
+
+        <!-- Revenue per product table -->
+        <div class="panel">
+          <div class="panel-head">
+            <span class="panel-title">Revenue per product</span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Product</th><th>Units</th><th>Revenue</th></tr></thead>
+              <tbody>
+                <tr th:each="row : ${revenuePerProduct}">
+                  <td th:text="${row[0]}">—</td>
+                  <td th:text="${row[1]}">0</td>
+                  <td th:text="'$' + ${#numbers.formatDecimal(row[2],1,'COMMA',2,'POINT')}">$0</td>
+                </tr>
+                <tr th:if="${revenuePerProduct.isEmpty()}">
+                  <td colspan="3" style="color:var(--text-tertiary)">No data yet.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+</body>
+</html>

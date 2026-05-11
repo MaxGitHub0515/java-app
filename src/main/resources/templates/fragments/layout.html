@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!-- Reusable sidebar nav fragment -->
+<nav th:fragment="sidebar(active)" class="sidebar">
+  <div class="brand">
+    <div class="brand-title">ShopAdmin</div>
+    <div class="brand-sub">E-Commerce Panel</div>
+  </div>
+  <div class="nav-section">Overview</div>
+  <a th:href="@{/analytics}"
+     th:class="${active == 'analytics'} ? 'nav-item active' : 'nav-item'">
+    <span class="nav-icon">▦</span> Analytics
+  </a>
+  <div class="nav-section">Manage</div>
+  <a th:href="@{/customers}"
+     th:class="${active == 'customers'} ? 'nav-item active' : 'nav-item'">
+    <span class="nav-icon">◎</span> Customers
+  </a>
+  <a th:href="@{/products}"
+     th:class="${active == 'products'} ? 'nav-item active' : 'nav-item'">
+    <span class="nav-icon">▣</span> Products
+  </a>
+  <a th:href="@{/orders}"
+     th:class="${active == 'orders'} ? 'nav-item active' : 'nav-item'">
+    <span class="nav-icon">▤</span> Orders
+  </a>
+  <div style="margin-top:auto; padding:16px; border-top:0.5px solid var(--border);">
+    <form th:action="@{/logout}" method="post">
+      <button class="btn" type="submit"
+              style="width:100%;justify-content:center;color:var(--text-secondary)">
+        ⎋ Sign out
+      </button>
+    </form>
+  </div>
+</nav>
+
+</body>
+</html>

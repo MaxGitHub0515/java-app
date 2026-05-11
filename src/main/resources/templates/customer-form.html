@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title th:text="${customer.customerId == 0} ? 'Add Customer' : 'Edit Customer'">Customer Form</title>
+  <link rel="stylesheet" th:href="@{/css/admin.css}"/>
+</head>
+<body>
+<div class="shell">
+
+  <nav th:replace="fragments/layout :: sidebar('customers')"></nav>
+
+  <div class="main">
+    <div class="topbar">
+      <span class="topbar-title"
+            th:text="${customer.customerId == 0} ? 'Add customer' : 'Edit customer'">Form</span>
+      <div class="topbar-right">
+        <a th:href="@{/customers}" class="btn">← Cancel</a>
+      </div>
+    </div>
+    <div class="content">
+      <div class="panel" style="max-width:640px">
+        <form th:action="@{/customers/save}" method="post" th:object="${customer}">
+          <input type="hidden" th:field="*{customerId}"/>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">First name *</label>
+              <input class="form-input" th:field="*{firstName}" required/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Last name *</label>
+              <input class="form-input" th:field="*{lastName}" required/>
+            </div>
+            <div class="form-group form-full">
+              <label class="form-label">Email *</label>
+              <input class="form-input" type="email" th:field="*{email}" required/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Phone</label>
+              <input class="form-input" th:field="*{phoneNumber}"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Zip code</label>
+              <input class="form-input" th:field="*{zipCode}"/>
+            </div>
+            <div class="form-group form-full">
+              <label class="form-label">Address</label>
+              <input class="form-input" th:field="*{address}"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">City</label>
+              <input class="form-input" th:field="*{city}"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">State</label>
+              <input class="form-input" th:field="*{state}"/>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <button class="btn btn-primary" type="submit">Save customer</button>
+            <a th:href="@{/customers}" class="btn">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

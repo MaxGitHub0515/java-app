@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Orders — ShopAdmin</title>
+  <link rel="stylesheet" th:href="@{/css/admin.css}"/>
+</head>
+<body>
+<div class="shell">
+
+  <nav th:replace="fragments/layout :: sidebar('orders')"></nav>
+
+  <div class="main">
+    <div class="topbar">
+      <span class="topbar-title">Orders</span>
+      <div class="topbar-right">
+        <a th:href="@{/orders/new}" class="btn btn-primary">+ Place order</a>
+      </div>
+    </div>
+    <div class="content">
+
+      <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+      <div th:if="${error}"   class="alert alert-error"   th:text="${error}"></div>
+
+      <!-- Status filter tabs -->
+      <div class="tab-row">
+        <a class="tab" th:classappend="${selectedStatus == 'All'} ? ' active'"
+           th:href="@{/orders}">All</a>
+        <a class="tab" th:each="s : ${statuses}"
+           th:classappend="${selectedStatus == s.name()} ? ' active'"
+           th:href="@{/orders(status=${s.name()})}"
+           th:text="${s.name()}">Status</a>
+      </div>
+
+      <div class="panel" style="padding:0">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Customer</th>
+                <th>Date</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:if="${orders.isEmpty()}">
+                <td colspan="6" style="text-align:center;color:var(--text-tertiary);padding:32px">
+                  No orders found.
+                </td>
+              </tr>
+              <tr th:each="o : ${orders}">
+                <td style="color:var(--text-tertiary)">#<span th:text="${o.orderId}"></span></td>
+                <td>
+                  <div style="display:flex;align-items:center">
+                    <div class="avatar" th:text="${o.customer.initials}">??</div>
+                    <span th:text="${o.customer.fullName}">Name</span>
+                  </div>
+                </td>
+                <td style="color:var(--text-secondary)"
+                    th:text="${o.orderDate != null} ? ${#dates.format(o.orderDate,'dd MMM yyyy')} : '—'">—</td>
+                <td style="font-weight:500"
+                    th:text="'$' + ${#numbers.formatDecimal(o.totalAmount,1,'COMMA',2,'POINT')}">$0</td>
+                <td>
+                  <span th:text="${o.orderStatus}"
+                        th:class="'badge badge-' + ${o.orderStatus.toString().toLowerCase()}">—</span>
+                </td>
+                <td>
+                  <div style="display:flex;gap:6px">
+                    <a th:href="@{/orders/{id}(id=${o.orderId})}" class="btn btn-sm">Details</a>
+                    <form th:action="@{/orders/cancel/{id}(id=${o.orderId})}" method="post"
+                          th:if="${o.orderStatus.name() != 'Cancelled'}"
+                          onsubmit="return confirm('Cancel order #' + [[${o.orderId}]] + '?')">
+                      <button class="btn btn-sm btn-danger" type="submit">Cancel</button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+</body>
+</html>

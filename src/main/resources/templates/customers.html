@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Customers — ShopAdmin</title>
+  <link rel="stylesheet" th:href="@{/css/admin.css}"/>
+</head>
+<body>
+<div class="shell">
+
+  <nav th:replace="fragments/layout :: sidebar('customers')"></nav>
+
+  <div class="main">
+    <div class="topbar">
+      <span class="topbar-title">Customers</span>
+      <div class="topbar-right">
+        <a th:href="@{/customers/new}" class="btn btn-primary">+ Add customer</a>
+      </div>
+    </div>
+    <div class="content">
+
+      <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+      <div th:if="${error}"   class="alert alert-error"   th:text="${error}"></div>
+
+      <!-- Search -->
+      <form method="get" th:action="@{/customers}" style="display:flex;gap:8px;margin-bottom:16px">
+        <input class="search-bar" style="margin-bottom:0" name="search"
+               th:value="${search}" placeholder="Search by name…"/>
+        <button class="btn" type="submit">Search</button>
+        <a th:if="${search}" th:href="@{/customers}" class="btn">Clear</a>
+      </form>
+
+      <div class="panel" style="padding:0">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Customer</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>City</th>
+                <th>State</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:if="${customers.isEmpty()}">
+                <td colspan="6" style="text-align:center;color:var(--text-tertiary);padding:32px">
+                  No customers found.
+                </td>
+              </tr>
+              <tr th:each="c : ${customers}">
+                <td>
+                  <div style="display:flex;align-items:center">
+                    <div class="avatar" th:text="${c.initials}">??</div>
+                    <span th:text="${c.fullName}">Name</span>
+                  </div>
+                </td>
+                <td style="color:var(--text-secondary)" th:text="${c.email}">—</td>
+                <td style="color:var(--text-secondary)" th:text="${c.phoneNumber}">—</td>
+                <td th:text="${c.city}">—</td>
+                <td th:text="${c.state}">—</td>
+                <td>
+                  <div style="display:flex;gap:6px">
+                    <a th:href="@{/customers/{id}(id=${c.customerId})}" class="btn btn-sm">View</a>
+                    <a th:href="@{/customers/edit/{id}(id=${c.customerId})}" class="btn btn-sm">Edit</a>
+                    <form th:action="@{/customers/delete/{id}(id=${c.customerId})}" method="post"
+                          onsubmit="return confirm('Delete this customer?')">
+                      <button class="btn btn-sm btn-danger" type="submit">Delete</button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+</body>
+</html>
