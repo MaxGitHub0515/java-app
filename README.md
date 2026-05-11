@@ -77,7 +77,7 @@ admin / admin123
 
 # Documentation
 
-- dokumentacja.pdf
+- [dokumentacja.pdf](dokumentacja.pdf)
 
 ---
 
