@@ -34,58 +34,65 @@ Built with modern Java backend technologies and MVC architecture.
 
 # Preview
 
-<div align="center">
+---
 
 ## Login Page
 
-<img src=".github/assets/login-page.png" width="900"/>
+<p align="center">
+  <img src=".github/assets/login-page.png" width="95%">
+</p>
 
+<p align="center">
 Secure administrator authentication with Spring Security and BCrypt encryption.
+</p>
 
 ---
 
 ## Analytics Dashboard
 
-<img src=".github/assets/analytics-dashboard.png" width="900"/>
+<p align="center">
+  <img src=".github/assets/analytics-dashboard.png" width="95%">
+</p>
 
-Real-time KPI tracking:
-- Revenue
-- Orders
-- Inventory value
-- Top customers
-- Best-selling products
+<p align="center">
+Real-time KPI tracking including revenue, orders, inventory value, top customers, and best-selling products.
+</p>
 
 ---
 
 ## Customers Management
 
-<img src=".github/assets/customers-management.png" width="900"/>
+<p align="center">
+  <img src=".github/assets/customers-management.png" width="95%">
+</p>
 
-CRUD operations with customer search and profile management.
+<p align="center">
+Customer CRUD operations with search, profile management, and detailed customer information.
+</p>
 
 ---
 
 ## Products Management
 
-<img src=".github/assets/products-management.png" width="900"/>
+<p align="center">
+  <img src=".github/assets/products-management.png" width="95%">
+</p>
 
-Inventory management with:
-- Restocking
-- Stock monitoring
-- Low-stock alerts
+<p align="center">
+Inventory management with restocking, stock monitoring, and low-stock alerts.
+</p>
 
 ---
 
 ## Orders Management
 
-<img src=".github/assets/orders-management.png" width="900"/>
+<p align="center">
+  <img src=".github/assets/orders-management.png" width="95%">
+</p>
 
-Order lifecycle management with:
-- Status tracking
-- Cancellation
-- Automatic inventory restoration
-
-</div>
+<p align="center">
+Order lifecycle management with status tracking, cancellation, and automatic inventory restoration.
+</p>
 
 ---
 
