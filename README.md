@@ -42,9 +42,6 @@ Built with modern Java backend technologies and MVC architecture.
 Full application walkthrough including authentication, analytics dashboard, customer management, inventory control, and order processing.
 </p>
 
-<p align="center">
-  <a href=".github/assets/demo.mp4">▶ Watch Full HD Demo</a>
-</p>
 
 ---
 
